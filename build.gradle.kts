@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "ru.logonik"
-version = "1.0-SNAPSHOT"
+version = "2.0.0-SNAPSHOT"
 
 repositories {
     mavenLocal()
@@ -21,9 +21,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT")
-    api("co.aikar:acf-paper:0.5.1-SNAPSHOT")
-    api("dev.triumphteam:triumph-gui:3.1.11")
+    implementation("org.spigotmc:spigot-api:1.13.1-R0.1-SNAPSHOT")
+    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
+    implementation("dev.triumphteam:triumph-gui:3.1.11")
+    implementation("com.google.code.gson:gson:2.13.1")
 }
 
 java {

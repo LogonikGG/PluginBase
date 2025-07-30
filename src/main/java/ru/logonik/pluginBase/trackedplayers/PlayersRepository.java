@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PlayersRepository implements Listener {
 
@@ -37,7 +38,7 @@ public class PlayersRepository implements Listener {
         return trackedPlayers.values().stream()
                 .map(TrackedPlayer::getPlayer)
                 .filter(Objects::nonNull)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<String> getAllUnique() {

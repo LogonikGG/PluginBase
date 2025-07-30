@@ -38,7 +38,8 @@ public class ServicesLocator {
 
     public void onStart() throws Exception {
         for (Object value : services.values()) {
-            if (value instanceof PluginStartListener startListener) {
+            if (value instanceof PluginStartListener) {
+                PluginStartListener startListener = (PluginStartListener) value;
                 try {
                     startListener.start(this);
                 } catch (Exception e) {
@@ -54,7 +55,8 @@ public class ServicesLocator {
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         scheduler.runAsync(() -> {
             for (Object value : services.values()) {
-                if (value instanceof PlayerAvailableListener playerAvailableListener) {
+                if (value instanceof PlayerAvailableListener) {
+                    PlayerAvailableListener playerAvailableListener = (PlayerAvailableListener) value;
                     try {
                         for (Player player : players) {
                             if (player.isOnline()) {
@@ -71,7 +73,8 @@ public class ServicesLocator {
 
     public void onStop() {
         for (Object value : services.values()) {
-            if (value instanceof PluginDisableListener disableListener) {
+            if (value instanceof PluginDisableListener) {
+                PluginDisableListener disableListener = (PluginDisableListener) value;
                 try {
                     disableListener.disable();
                 } catch (Exception e) {
@@ -84,7 +87,8 @@ public class ServicesLocator {
     protected void onPlayerJoin(Player player) {
         scheduler.runAsync(() -> {
             for (Object value : services.values()) {
-                if (value instanceof PlayerAvailableListener playerAvailableListener) {
+                if (value instanceof PlayerAvailableListener) {
+                    PlayerAvailableListener playerAvailableListener = (PlayerAvailableListener) value;
                     try {
                         playerAvailableListener.onPlayerAvailableAsync(player);
                     } catch (Exception e) {
@@ -98,7 +102,8 @@ public class ServicesLocator {
     protected void onPlayerQuit(Player player) {
         scheduler.runAsync(() -> {
             for (Object value : services.values()) {
-                if (value instanceof PlayerQuitListenerAsync playerQuitListenerAsync) {
+                if (value instanceof PlayerQuitListenerAsync) {
+                    PlayerQuitListenerAsync playerQuitListenerAsync = (PlayerQuitListenerAsync) value;
                     try {
                         playerQuitListenerAsync.onPlayerQuitAsync(player);
                     } catch (Exception e) {
@@ -108,7 +113,8 @@ public class ServicesLocator {
             }
         });
         for (Object value : services.values()) {
-            if (value instanceof PlayerQuitListenerSync playerQuitListenerSync) {
+            if (value instanceof PlayerQuitListenerSync) {
+                PlayerQuitListenerSync playerQuitListenerSync = (PlayerQuitListenerSync) value;
                 try {
                     playerQuitListenerSync.onPlayerQuitSync(player);
                 } catch (Exception e) {

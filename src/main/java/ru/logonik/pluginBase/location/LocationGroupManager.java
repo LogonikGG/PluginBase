@@ -15,20 +15,20 @@ public class LocationGroupManager extends BulkDataManager<String, LocationGroup,
             saver,
             group -> {
                 LocationGroupModel model = new LocationGroupModel();
-                model.serializedLocations = group.getAll().stream()
+                model.setSerializedLocations(group.getAll().stream()
                         .map(LocationMapper::serializeLocation)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toList()));
                 return model;
             },
             model -> {
-                LocationGroup group = new LocationGroup();
-                for (String serialized : model.serializedLocations) {
+                LocationGroup group = new LocationGroup(model.getKeyName());
+                for (String serialized : model.getSerializedLocations()) {
                     Location loc = LocationMapper.deserializeLocation(serialized);
                     if (loc != null) group.add(loc);
                 }
                 return group;
             },
-            key -> new LocationGroup()
+                LocationGroup::new
         );
     }
 

@@ -9,8 +9,17 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LocationGroup {
+    private final String keyName;
     private final List<Location> locations = new ArrayList<>();
     private final AtomicInteger nextIndex = new AtomicInteger(0);
+
+    public LocationGroup(String keyName) {
+        this.keyName = keyName;
+    }
+
+    public String getKeyName() {
+        return keyName;
+    }
 
     public void add(Location location) {
         if (location == null) throw new IllegalArgumentException("Location cannot be null");

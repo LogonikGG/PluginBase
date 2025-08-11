@@ -50,7 +50,7 @@ public class BulkDataManager<K, D, M> implements PluginStartListener, PluginDisa
         saver.saveAll(modelsToSave);
     }
 
-    public void saveImmediately(K key) throws Exception {
+    public void saveImmediately(K key) throws SaveLoadException {
         D data = dataMap.get(key);
         if (data != null) {
             M model = toModel.apply(data);
@@ -58,8 +58,16 @@ public class BulkDataManager<K, D, M> implements PluginStartListener, PluginDisa
         }
     }
 
-    public D get(K key) {
+    public D getOrCompute(K key) {
         return dataMap.computeIfAbsent(key, dataFactory);
+    }
+
+    public D getOrDefault(K key) {
+        return dataMap.getOrDefault(key, dataFactory.apply(key));
+    }
+
+    public D get(K key) {
+        return dataMap.get(key);
     }
 
     public void add(K key, D data) throws SaveLoadException {

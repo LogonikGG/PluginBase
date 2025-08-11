@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LocationGroup {
     private final List<Location> locations = new ArrayList<>();
+    private final AtomicInteger nextIndex = new AtomicInteger(0);
 
     public void add(Location location) {
         if (location == null) throw new IllegalArgumentException("Location cannot be null");
@@ -34,5 +36,15 @@ public class LocationGroup {
 
     public boolean isEmpty() {
         return locations.isEmpty();
+    }
+
+    public Location getNext() {
+        if (locations.isEmpty()) return null;
+        int index = nextIndex.getAndUpdate(i -> (i + 1) % locations.size());
+        return locations.get(index);
+    }
+
+    public void resetSequence() {
+        nextIndex.set(0);
     }
 }

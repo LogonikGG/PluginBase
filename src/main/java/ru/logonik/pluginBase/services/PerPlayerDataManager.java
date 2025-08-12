@@ -1,6 +1,7 @@
 package ru.logonik.pluginBase.services;
 
 import org.bukkit.entity.Player;
+import ru.logonik.pluginBase.execptions.SaveLoadException;
 import ru.logonik.pluginBase.saveload.LoadSaver;
 import ru.logonik.pluginBase.servicelocator.PlayerAvailableListener;
 import ru.logonik.pluginBase.servicelocator.PlayerQuitListenerAsync;
@@ -10,8 +11,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-
-// todo not tested at all
 public class PerPlayerDataManager<D, M> implements PlayerAvailableListener, PlayerQuitListenerAsync {
 
     private final Map<UUID, D> playerData = new ConcurrentHashMap<>();
@@ -39,9 +38,6 @@ public class PerPlayerDataManager<D, M> implements PlayerAvailableListener, Play
         if (loadedModel != null) {
             D data = fromModel.apply(loadedModel);
             playerData.put(uuid, data);
-        } else {
-            D newData = dataFactory.apply(player);
-            playerData.put(uuid, newData);
         }
     }
 
@@ -53,18 +49,30 @@ public class PerPlayerDataManager<D, M> implements PlayerAvailableListener, Play
             M model = toModel.apply(data);
             saver.save(uuid, model);
             playerData.remove(uuid);
+        } else {
+            saver.delete(uuid);
         }
+    }
+
+    public D getOrCompute(Player player) {
+        return playerData.computeIfAbsent(player.getUniqueId(), uuid -> dataFactory.apply(player));
+    }
+
+    public D getOrDefault(Player player) {
+        return playerData.getOrDefault(player.getUniqueId(), dataFactory.apply(player));
     }
 
     public D get(Player player) {
         return playerData.computeIfAbsent(player.getUniqueId(), uuid -> dataFactory.apply(player));
     }
 
-    public void remove(Player player) {
-        playerData.remove(player.getUniqueId());
+    public D remove(Player player) throws SaveLoadException {
+        D removed = playerData.remove(player.getUniqueId());
+        saver.delete(player.getUniqueId());
+        return removed;
     }
 
-    public boolean has(Player player) {
+    public boolean hasCash(Player player) {
         return playerData.containsKey(player.getUniqueId());
     }
 

@@ -49,8 +49,6 @@ public class PerPlayerDataManager<D, M> implements PlayerAvailableListener, Play
             M model = toModel.apply(data);
             saver.save(uuid, model);
             playerData.remove(uuid);
-        } else {
-            saver.delete(uuid);
         }
     }
 

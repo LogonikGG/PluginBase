@@ -22,6 +22,7 @@ repositories {
 
 dependencies {
     implementation("org.spigotmc:spigot-api:1.13.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     implementation("dev.triumphteam:triumph-gui:3.1.11")
     implementation("com.google.code.gson:gson:2.13.1")

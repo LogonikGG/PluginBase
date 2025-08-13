@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
-public class InPluginPlayerTransfer implements PlayerTransferHandler<SessionManager> {
+public class InPluginPlayerTransfer implements PlayerTransferHandler {
 
     private final HashMap<UUID, SessionManager> players = new HashMap<>();
 

@@ -7,11 +7,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import ru.logonik.pluginBase.BukkitScheduler;
+import ru.logonik.pluginBase.Logger;
 
 public class BukkitServiceLocator extends ServicesLocator implements PluginStartListener, Listener {
 
-    public BukkitServiceLocator(Plugin plugin) {
-        super(new BukkitScheduler(plugin));
+    public BukkitServiceLocator(Plugin plugin, Logger logger) {
+        super(new BukkitScheduler(plugin), logger);
         registerService(Plugin.class, plugin);
         registerService(ServicesLocator.class, this);
     }

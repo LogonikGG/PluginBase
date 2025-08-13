@@ -13,9 +13,12 @@ import java.util.Objects;
 public class ServicesLocator {
     private final Map<Class<?>, Object> services = new HashMap<>();
     private final Scheduler scheduler;
+    private final Logger logger;
 
-    public ServicesLocator(Scheduler scheduler) {
+    public ServicesLocator(Scheduler scheduler, Logger logger) {
         this.scheduler = scheduler;
+        this.logger = logger;
+        registerService(Logger.class, logger);
     }
 
     public <T> void registerService(Class<T> clazz, T object) {
@@ -43,7 +46,7 @@ public class ServicesLocator {
                 try {
                     startListener.start(this);
                 } catch (Exception e) {
-                    Logger.error("Error while start", e);
+                    logger.error("Error while start", e);
                     throw e;
                 }
             }
@@ -64,7 +67,7 @@ public class ServicesLocator {
                             }
                         }
                     } catch (Exception e) {
-                        Logger.error("Error while handle player join", e);
+                        logger.error("Error while handle player join", e);
                     }
                 }
             }
@@ -78,7 +81,7 @@ public class ServicesLocator {
                 try {
                     disableListener.disable();
                 } catch (Exception e) {
-                    Logger.error("Error while disable", e);
+                    logger.error("Error while disable", e);
                 }
             }
         }
@@ -92,7 +95,7 @@ public class ServicesLocator {
                     try {
                         playerAvailableListener.onPlayerAvailableAsync(player);
                     } catch (Exception e) {
-                        Logger.error("Error while handle player join", e);
+                        logger.error("Error while handle player join", e);
                     }
                 }
             }
@@ -107,7 +110,7 @@ public class ServicesLocator {
                     try {
                         playerQuitListenerAsync.onPlayerQuitAsync(player);
                     } catch (Exception e) {
-                        Logger.error("Error while handle player join (async)", e);
+                        logger.error("Error while handle player join (async)", e);
                     }
                 }
             }
@@ -118,7 +121,7 @@ public class ServicesLocator {
                 try {
                     playerQuitListenerSync.onPlayerQuitSync(player);
                 } catch (Exception e) {
-                    Logger.error("Error while handle player join", e);
+                    logger.error("Error while handle player join", e);
                 }
             }
         }

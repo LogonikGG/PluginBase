@@ -5,12 +5,11 @@ import ru.logonik.pluginBase.servicelocator.BukkitServiceLocator;
 
 public class BootstrapPlugin {
 
-    private BukkitServiceLocator serviceLocator;
+    private final BukkitServiceLocator serviceLocator;
     private boolean stableStart;
 
     public BootstrapPlugin(Plugin plugin) {
-        Logger.setLogger(plugin.getLogger());
-        this.serviceLocator = new BukkitServiceLocator(plugin);
+        this.serviceLocator = new BukkitServiceLocator(plugin, new Logger(plugin.getLogger()));
         stableStart = false;
     }
 

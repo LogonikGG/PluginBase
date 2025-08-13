@@ -61,6 +61,17 @@ public class ItemStackNbt {
     }
 
     /**
+     * Gets the NBT tag based on a given key and check it exist.
+     *
+     * @param itemStack The {@link ItemStack} to get from.
+     * @param key       The key to look for.
+     * @return return true if tag exist in the {@link ItemStack}.
+     */
+    public static boolean hasString(@NotNull final ItemStack itemStack, @NotNull final String key) {
+        return nbt.getString(itemStack, key) != null;
+    }
+
+    /**
      * Sets a boolean to the {@link ItemStack}.
      * Mainly used for setting an item to be unbreakable on older versions.
      *

@@ -67,7 +67,7 @@ public class ItemStackNbt {
      * @param key       The key to look for.
      * @return return true if tag exist in the {@link ItemStack}.
      */
-    public static boolean hasString(@NotNull final ItemStack itemStack, @NotNull final String key) {
+    public static boolean hasKey(@NotNull final ItemStack itemStack, @NotNull final String key) {
         return nbt.getString(itemStack, key) != null;
     }
 

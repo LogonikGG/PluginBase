@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class ServicesLocator {
     private final Map<Class<?>, Object> services = new HashMap<>();
@@ -37,6 +38,19 @@ public class ServicesLocator {
 
     public Collection<Object> getAllServices() {
         return services.values();
+    }
+
+    public <T> void safeConsumeForInstanceof(Class<T> clazz, Consumer<T> consumer) {
+        for (Object value : services.values()) {
+            if (clazz.isInstance(value)) {
+                T t = clazz.cast(value);
+                try {
+                    consumer.accept(t);
+                } catch (Exception e) {
+                    logger.error("Error while consume", e);
+                }
+            }
+        }
     }
 
     public void onStart() throws Exception {

@@ -30,6 +30,10 @@ public class LocationGroup {
         return locations.remove(location);
     }
 
+    public void clearAll() {
+        locations.clear();
+    }
+
     public List<Location> getAll() {
         return Collections.unmodifiableList(locations);
     }

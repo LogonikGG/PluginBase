@@ -11,7 +11,7 @@ public class PlayerData extends CharacterPlayerData {
 
     public PlayerData(Player player) {
         super(player);
-        lastLocation = player.getLocation();
+        lastLocation = player.getLocation().clone();
         gameMode = player.getGameMode();
     }
 

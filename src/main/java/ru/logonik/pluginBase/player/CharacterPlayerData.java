@@ -3,6 +3,7 @@ package ru.logonik.pluginBase.player;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import ru.logonik.pluginBase.BukkitUtil;
 
 import java.util.Collection;
 
@@ -24,9 +25,9 @@ public class CharacterPlayerData {
         saturation = player.getSaturation();
         level = player.getLevel();
         xp = player.getExp();
-        potionEffects = player.getActivePotionEffects();
-        armorContent = player.getInventory().getArmorContents();
-        inventoryContent = player.getInventory().getContents();
+        potionEffects = BukkitUtil.deepCopyPotionEffects(player.getActivePotionEffects());
+        armorContent = BukkitUtil.deepCopyItemStackArray(player.getInventory().getArmorContents());
+        inventoryContent = BukkitUtil.deepCopyItemStackArray(player.getInventory().getContents());
     }
 
     public void loadData(Player player) {

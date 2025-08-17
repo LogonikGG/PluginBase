@@ -72,4 +72,8 @@ public class PlayerHandler {
         if (playerData == null) return;
         playerData.loadData(player);
     }
+
+    public void clear() {
+        data.clear();
+    }
 }

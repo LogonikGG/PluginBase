@@ -10,8 +10,18 @@ import java.util.Base64;
 
 public class ItemStackTypeAdapter implements JsonSerializer<ItemStack>, JsonDeserializer<ItemStack> {
 
+    private boolean allowNull = false;
+
+    public ItemStackTypeAdapter() {
+    }
+
+    public ItemStackTypeAdapter(boolean allowNull) {
+        this.allowNull = allowNull;
+    }
+
     @Override
     public JsonElement serialize(ItemStack itemStack, Type type, JsonSerializationContext context) {
+        if (allowNull && itemStack == null) return JsonNull.INSTANCE;
         // I know I'm genius =D
         YamlConfiguration config = new YamlConfiguration();
         config.options().width(Integer.MAX_VALUE);
@@ -22,6 +32,7 @@ public class ItemStackTypeAdapter implements JsonSerializer<ItemStack>, JsonDese
 
     @Override
     public ItemStack deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        if (allowNull && json.isJsonNull()) return null;
         try {
             String yamlString = new String(Base64.getDecoder().decode(json.getAsString()), StandardCharsets.UTF_8);
             YamlConfiguration config = new YamlConfiguration();

@@ -1,7 +1,5 @@
 package ru.logonik.pluginBase.servicelocator;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import ru.logonik.pluginBase.Logger;
 import ru.logonik.pluginBase.Scheduler;
 
@@ -12,12 +10,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ServicesLocator {
-    private final Map<Class<?>, Object> services = new HashMap<>();
-    private final Scheduler scheduler;
-    private final Logger logger;
+    protected final Map<Class<?>, Object> services = new HashMap<>();
+    protected final Logger logger;
 
-    public ServicesLocator(Scheduler scheduler, Logger logger) {
-        this.scheduler = scheduler;
+    public ServicesLocator(Logger logger) {
         this.logger = logger;
         registerService(Logger.class, logger);
     }
@@ -48,94 +44,6 @@ public class ServicesLocator {
                     consumer.accept(t);
                 } catch (Exception e) {
                     logger.error("Error while consume", e);
-                }
-            }
-        }
-    }
-
-    public void onStart() throws Exception {
-        for (Object value : services.values()) {
-            if (value instanceof PluginStartListener) {
-                PluginStartListener startListener = (PluginStartListener) value;
-                try {
-                    startListener.start(this);
-                } catch (Exception e) {
-                    logger.error("Error while start", e);
-                    throw e;
-                }
-            }
-        }
-        initAlreadyExistedPlayers();
-    }
-
-    protected void initAlreadyExistedPlayers() {
-        Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        scheduler.runAsync(() -> {
-            for (Object value : services.values()) {
-                if (value instanceof PlayerAvailableListener) {
-                    PlayerAvailableListener playerAvailableListener = (PlayerAvailableListener) value;
-                    try {
-                        for (Player player : players) {
-                            if (player.isOnline()) {
-                                playerAvailableListener.onPlayerAvailableAsync(player);
-                            }
-                        }
-                    } catch (Exception e) {
-                        logger.error("Error while handle player join", e);
-                    }
-                }
-            }
-        });
-    }
-
-    public void onStop() {
-        for (Object value : services.values()) {
-            if (value instanceof PluginDisableListener) {
-                PluginDisableListener disableListener = (PluginDisableListener) value;
-                try {
-                    disableListener.disable();
-                } catch (Exception e) {
-                    logger.error("Error while disable", e);
-                }
-            }
-        }
-    }
-
-    protected void onPlayerJoin(Player player) {
-        scheduler.runAsync(() -> {
-            for (Object value : services.values()) {
-                if (value instanceof PlayerAvailableListener) {
-                    PlayerAvailableListener playerAvailableListener = (PlayerAvailableListener) value;
-                    try {
-                        playerAvailableListener.onPlayerAvailableAsync(player);
-                    } catch (Exception e) {
-                        logger.error("Error while handle player join", e);
-                    }
-                }
-            }
-        });
-    }
-
-    protected void onPlayerQuit(Player player) {
-        scheduler.runAsync(() -> {
-            for (Object value : services.values()) {
-                if (value instanceof PlayerQuitListenerAsync) {
-                    PlayerQuitListenerAsync playerQuitListenerAsync = (PlayerQuitListenerAsync) value;
-                    try {
-                        playerQuitListenerAsync.onPlayerQuitAsync(player);
-                    } catch (Exception e) {
-                        logger.error("Error while handle player join (async)", e);
-                    }
-                }
-            }
-        });
-        for (Object value : services.values()) {
-            if (value instanceof PlayerQuitListenerSync) {
-                PlayerQuitListenerSync playerQuitListenerSync = (PlayerQuitListenerSync) value;
-                try {
-                    playerQuitListenerSync.onPlayerQuitSync(player);
-                } catch (Exception e) {
-                    logger.error("Error while handle player join", e);
                 }
             }
         }

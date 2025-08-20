@@ -13,10 +13,10 @@ import java.util.function.Function;
 public class BulkDataManager<K, D, M> implements PluginStartListener, PluginDisableListener {
 
     private final Map<K, D> dataMap = new ConcurrentHashMap<>();
-    private final LoadSaver<K, M> saver;
-    private final Function<D, M> toModel;
-    private final Function<M, D> fromModel;
-    private final Function<K, D> dataFactory;
+    protected LoadSaver<K, M> saver;
+    protected Function<D, M> toModel;
+    protected Function<M, D> fromModel;
+    protected Function<K, D> dataFactory;
 
     public BulkDataManager(
             LoadSaver<K, M> saver,
@@ -28,6 +28,9 @@ public class BulkDataManager<K, D, M> implements PluginStartListener, PluginDisa
         this.toModel = toModel;
         this.fromModel = fromModel;
         this.dataFactory = dataFactory;
+    }
+
+    public BulkDataManager() {
     }
 
     @Override

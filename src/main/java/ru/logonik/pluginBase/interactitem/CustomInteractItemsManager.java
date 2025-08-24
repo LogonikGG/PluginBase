@@ -52,8 +52,8 @@ public class CustomInteractItemsManager<Item extends CustomInteractItem> impleme
         return registeredItems.containsKey(itemValue);
     }
 
-    public ItemStack createItem(String itemKey) {
-        Item item = getItem(itemKey);
+    public ItemStack createItem(String itemValue) {
+        Item item = getItem(itemValue);
         if(item == null) return null;
         ItemStack itemStack = item.createItem();
         return ItemStackNbt.setString(itemStack, itemKey, item.getItemValue());

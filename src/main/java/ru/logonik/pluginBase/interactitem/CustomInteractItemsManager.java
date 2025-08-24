@@ -1,28 +1,29 @@
 package ru.logonik.pluginBase.interactitem;
 
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import ru.logonik.pluginBase.nbt.ItemStackNbt;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class CustomInteractItemsManager {
+public class CustomInteractItemsManager<Item extends CustomInteractItem> implements Listener {
     protected final String itemKey;
 
-    protected final HashMap<String, CustomInteractItem> registeredItems = new HashMap<>();
+    protected final HashMap<String, Item> registeredItems = new HashMap<>();
 
     public CustomInteractItemsManager(String itemKey) {
         this.itemKey = itemKey;
     }
 
-    public void registerItem(CustomInteractItem item) {
+    public void registerItem(Item item) {
         if (registeredItems.containsKey(item.getItemValue())) {
             throw new IllegalArgumentException("Item with key '" + item.getItemValue() + "' is already registered");
         }
         registeredItems.put(item.getItemValue(), item);
     }
 
-    public boolean unregisterItem(CustomInteractItem item) {
+    public boolean unregisterItem(Item item) {
         boolean removed = registeredItems.remove(item.getItemValue()) != null;
         if (removed) {
             item.cleanup();
@@ -31,7 +32,7 @@ public class CustomInteractItemsManager {
     }
 
     public boolean unregisterItem(String itemValue) {
-        CustomInteractItem item = registeredItems.remove(itemValue);
+        Item item = registeredItems.remove(itemValue);
         if (item != null) {
             item.cleanup();
             return true;
@@ -39,11 +40,11 @@ public class CustomInteractItemsManager {
         return false;
     }
 
-    public CustomInteractItem getItem(String itemValue) {
+    public Item getItem(String itemValue) {
         return registeredItems.get(itemValue);
     }
 
-    public List<CustomInteractItem> getRegisteredItems() {
+    public List<Item> getRegisteredItems() {
         return List.copyOf(registeredItems.values());
     }
 
@@ -52,7 +53,7 @@ public class CustomInteractItemsManager {
     }
 
     public ItemStack createItem(String itemKey) {
-        CustomInteractItem item = getItem(itemKey);
+        Item item = getItem(itemKey);
         if(item == null) return null;
         ItemStack itemStack = item.createItem();
         return ItemStackNbt.setString(itemStack, itemKey, item.getItemValue());
@@ -62,19 +63,19 @@ public class CustomInteractItemsManager {
         return findItemByStack(itemStack) != null;
     }
 
-    public CustomInteractItem findItemByStack(ItemStack itemStack) {
+    public Item findItemByStack(ItemStack itemStack) {
         String value = ItemStackNbt.getString(itemStack, itemKey);
         if(value == null) return null;
         return registeredItems.get(value);
     }
 
     public String getItemValue(ItemStack itemStack) {
-        CustomInteractItem interactItem = findItemByStack(itemStack);
+        Item interactItem = findItemByStack(itemStack);
         return interactItem == null ? null : interactItem.getItemValue();
     }
 
     public void cleanupAll() {
-        for (CustomInteractItem item : registeredItems.values()) {
+        for (Item item : registeredItems.values()) {
             item.cleanup();
         }
         registeredItems.clear();

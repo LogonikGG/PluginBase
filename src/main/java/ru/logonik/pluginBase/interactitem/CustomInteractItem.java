@@ -4,7 +4,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.logonik.pluginBase.nbt.ItemStackNbt;
 
 public abstract class CustomInteractItem {
-    private final String itemValue;
+    protected final String itemValue;
     
     public CustomInteractItem(String itemValue) {
         this.itemValue = itemValue;
@@ -14,7 +14,7 @@ public abstract class CustomInteractItem {
         return itemValue;
     }
     
-    protected abstract ItemStack createItem();
+    public abstract ItemStack createItem();
     
     public boolean isThisItem(ItemStack item) {
         return item != null && ItemStackNbt.hasKey(item, itemValue);

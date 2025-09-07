@@ -26,6 +26,7 @@ dependencies {
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     implementation("dev.triumphteam:triumph-gui:3.1.11")
     implementation("com.google.code.gson:gson:2.13.1")
+    compileOnly("com.j256.ormlite:ormlite-core:6.1")
 }
 
 java {

@@ -3,10 +3,7 @@ package ru.logonik.pluginBase.servicelocator;
 import ru.logonik.pluginBase.Logger;
 import ru.logonik.pluginBase.Scheduler;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ServicesLocator {
@@ -34,6 +31,10 @@ public class ServicesLocator {
 
     public Collection<Object> getAllServices() {
         return services.values();
+    }
+
+    public Map<Class<?>, Object> getServices() {
+        return Collections.unmodifiableMap(services);
     }
 
     public <T> void safeConsumeForInstanceof(Class<T> clazz, Consumer<T> consumer) {

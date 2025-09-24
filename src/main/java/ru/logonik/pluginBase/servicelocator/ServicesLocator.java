@@ -1,7 +1,6 @@
 package ru.logonik.pluginBase.servicelocator;
 
 import ru.logonik.pluginBase.Logger;
-import ru.logonik.pluginBase.Scheduler;
 
 import java.util.*;
 import java.util.function.Consumer;

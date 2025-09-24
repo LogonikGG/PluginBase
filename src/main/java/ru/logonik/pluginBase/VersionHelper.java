@@ -24,7 +24,6 @@
 package ru.logonik.pluginBase;
 
 import com.google.common.primitives.Ints;
-import dev.triumphteam.gui.components.exception.GuiException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.meta.ItemMeta;

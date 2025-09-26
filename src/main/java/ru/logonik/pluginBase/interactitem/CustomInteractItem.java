@@ -1,5 +1,8 @@
 package ru.logonik.pluginBase.interactitem;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import ru.logonik.pluginBase.nbt.ItemStackNbt;
 
@@ -15,7 +18,19 @@ public abstract class CustomInteractItem {
     }
     
     public abstract ItemStack createItem();
-    
+
+    public void onAction(PlayerInteractEvent e) {
+
+    }
+
+    public void onAction(PlayerInteractEntityEvent e) {
+
+    }
+
+    public void onAction(Player player) {
+
+    }
+
     public boolean isThisItem(ItemStack item) {
         return item != null && ItemStackNbt.hasKey(item, itemValue);
     }

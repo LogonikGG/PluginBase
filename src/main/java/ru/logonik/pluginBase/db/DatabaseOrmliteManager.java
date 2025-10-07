@@ -31,6 +31,10 @@ public class DatabaseOrmliteManager {
         return new OrmLiteLoadSaver<>(dao);
     }
 
+    public ConnectionSource getConnectionSource() {
+        return connectionSource;
+    }
+
     public void close() throws Exception {
         if (connectionSource != null) {
             connectionSource.close();

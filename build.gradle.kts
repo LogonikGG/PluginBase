@@ -27,7 +27,7 @@ dependencies {
     implementation("dev.triumphteam:triumph-gui:3.1.11") // MIT License
     implementation("com.google.code.gson:gson:2.13.1") // Apache License Version 2.0
 
-    compileOnly("com.j256.ormlite:ormlite-core:6.1") // ISC License (https://opensource.org/licenses/ISC)
+    compileOnly("com.j256.ormlite:ormlite-jdbc:6.1") // ISC License (https://opensource.org/licenses/ISC)
 }
 
 java {

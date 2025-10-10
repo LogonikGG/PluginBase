@@ -19,6 +19,10 @@ public abstract class CustomInteractItem {
     
     public abstract ItemStack createItem();
 
+    public ItemStack createItem(Object ctx) {
+        return createItem();
+    }
+
     public void onAction(PlayerInteractEvent e) {
 
     }

@@ -6,6 +6,43 @@ public class LogoUtils {
         throw (E) e;
     }
 
+    public static String formatSeconds(long totalSeconds) {
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+
+        StringBuilder result = new StringBuilder();
+
+        if (hours > 0) {
+            result.append(hours).append(" ").append(getRussianWord(hours, "час", "часа", "часов")).append(" ");
+        }
+
+        if (minutes > 0) {
+            result.append(minutes).append(" ").append(getRussianWord(minutes, "минута", "минуты", "минут")).append(" ");
+        }
+
+        if (seconds > 0 || totalSeconds == 0) {
+            result.append(seconds).append(" ").append(getRussianWord(seconds, "секунда", "секунды", "секунд"));
+        }
+
+        return result.toString().trim();
+    }
+
+    private static String getRussianWord(long number, String form1, String form2, String form5) {
+        number = number % 100;
+        if (number >= 11 && number <= 19) {
+            return form5;
+        }
+        long i = number % 10;
+        switch ((int) i) {
+            case 1: return form1;
+            case 2:
+            case 3:
+            case 4: return form2;
+            default: return form5;
+        }
+    }
+
     public static String formatTimeAgoFromSeconds(long timestampSeconds) {
         long now = System.currentTimeMillis();
         long diff = now - (timestampSeconds * 1000L);

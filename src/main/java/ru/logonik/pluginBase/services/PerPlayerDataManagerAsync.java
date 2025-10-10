@@ -3,7 +3,7 @@ package ru.logonik.pluginBase.services;
 import org.bukkit.entity.Player;
 import ru.logonik.pluginBase.execptions.SaveLoadException;
 import ru.logonik.pluginBase.saveload.LoadSaver;
-import ru.logonik.pluginBase.servicelocator.PlayerAvailableListener;
+import ru.logonik.pluginBase.servicelocator.PlayerAvailableListenerAsync;
 import ru.logonik.pluginBase.servicelocator.PlayerQuitListenerAsync;
 
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-public class PerPlayerDataManager<D, M> implements PlayerAvailableListener, PlayerQuitListenerAsync {
+public class PerPlayerDataManagerAsync<D, M> implements PlayerAvailableListenerAsync, PlayerQuitListenerAsync {
 
     private final Map<UUID, D> playerData = new ConcurrentHashMap<>();
     private final Function<Player, D> dataFactory;
@@ -19,7 +19,7 @@ public class PerPlayerDataManager<D, M> implements PlayerAvailableListener, Play
     private final Function<D, M> toModel;
     private final Function<M, D> fromModel;
 
-    public PerPlayerDataManager(
+    public PerPlayerDataManagerAsync(
             Function<Player, D> dataFactory,
             LoadSaver<UUID, M> saver,
             Function<D, M> toModel,

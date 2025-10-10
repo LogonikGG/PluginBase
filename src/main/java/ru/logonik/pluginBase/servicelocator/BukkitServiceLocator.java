@@ -65,12 +65,12 @@ public class BukkitServiceLocator extends ServicesLocator implements PluginStart
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         scheduler.runAsync(() -> {
             for (Object value : services.values()) {
-                if (value instanceof PlayerAvailableListener) {
-                    PlayerAvailableListener playerAvailableListener = (PlayerAvailableListener) value;
+                if (value instanceof PlayerAvailableListenerAsync) {
+                    PlayerAvailableListenerAsync playerAvailableListenerAsync = (PlayerAvailableListenerAsync) value;
                     try {
                         for (Player player : players) {
                             if (player.isOnline()) {
-                                playerAvailableListener.onPlayerAvailableAsync(player);
+                                playerAvailableListenerAsync.onPlayerAvailableAsync(player);
                             }
                         }
                     } catch (Exception e) {
@@ -79,6 +79,18 @@ public class BukkitServiceLocator extends ServicesLocator implements PluginStart
                 }
             }
         });
+        for (Object value : services.values()) {
+            if (value instanceof PlayerAvailableListenerSync) {
+                PlayerAvailableListenerSync playerAvailableListenerSync = (PlayerAvailableListenerSync) value;
+                try {
+                    for (Player player : players) {
+                        playerAvailableListenerSync.onPlayerAvailableSync(player);
+                    }
+                } catch (Exception e) {
+                    logger.error("Error while handle player join", e);
+                }
+            }
+        }
     }
 
     public void onStop() {
@@ -97,16 +109,26 @@ public class BukkitServiceLocator extends ServicesLocator implements PluginStart
     protected void onPlayerJoin(Player player) {
         scheduler.runAsync(() -> {
             for (Object value : services.values()) {
-                if (value instanceof PlayerAvailableListener) {
-                    PlayerAvailableListener playerAvailableListener = (PlayerAvailableListener) value;
+                if (value instanceof PlayerAvailableListenerAsync) {
+                    PlayerAvailableListenerAsync playerAvailableListenerAsync = (PlayerAvailableListenerAsync) value;
                     try {
-                        playerAvailableListener.onPlayerAvailableAsync(player);
+                        playerAvailableListenerAsync.onPlayerAvailableAsync(player);
                     } catch (Exception e) {
                         logger.error("Error while handle player join", e);
                     }
                 }
             }
         });
+        for (Object value : services.values()) {
+            if (value instanceof PlayerAvailableListenerSync) {
+                PlayerAvailableListenerSync playerAvailableListenerSync = (PlayerAvailableListenerSync) value;
+                try {
+                    playerAvailableListenerSync.onPlayerAvailableSync(player);
+                } catch (Exception e) {
+                    logger.error("Error while handle player join", e);
+                }
+            }
+        }
     }
 
     protected void onPlayerQuit(Player player) {

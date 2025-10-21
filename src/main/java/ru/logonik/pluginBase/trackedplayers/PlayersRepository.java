@@ -61,6 +61,10 @@ public class PlayersRepository implements Listener {
         }
     }
 
+    public TrackedPlayer getByUnique(UUID unique) {
+        return trackedPlayers.get(unique);
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         TrackedPlayer trackedPlayer = trackedPlayers.get(e.getPlayer().getUniqueId());

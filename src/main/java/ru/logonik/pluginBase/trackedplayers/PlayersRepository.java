@@ -30,8 +30,9 @@ public class PlayersRepository implements Listener {
         return trackedPlayers.containsKey(player);
     }
 
-    public List<TrackedPlayer> getAll() {
-        return List.copyOf(trackedPlayers.values());
+    @SuppressWarnings("unchecked")
+    public <T extends TrackedPlayer> List<T> getAll() {
+        return (List<T>) List.copyOf(trackedPlayers.values());
     }
 
     public List<Player> getOnlinePlayers() {

@@ -63,15 +63,16 @@ public class CustomInteractItemsManager<Item extends CustomInteractItem> impleme
         return findItemByStack(itemStack) != null;
     }
 
-    public Item findItemByStack(ItemStack itemStack) {
-        String value = ItemStackNbt.getString(itemStack, itemKey);
-        if(value == null) return null;
-        return registeredItems.get(value);
-    }
-
     public String getItemValue(ItemStack itemStack) {
         Item interactItem = findItemByStack(itemStack);
         return interactItem == null ? null : interactItem.getItemValue();
+    }
+
+    public Item findItemByStack(ItemStack itemStack) {
+        if(itemStack == null) return null;
+        String value = ItemStackNbt.getString(itemStack, itemKey);
+        if(value == null) return null;
+        return registeredItems.get(value);
     }
 
     public void cleanupAll() {

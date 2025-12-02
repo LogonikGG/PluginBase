@@ -45,15 +45,14 @@ public class PlayersRepository implements Listener {
     public List<String> getAllUnique() {
         ArrayList<String> result = new ArrayList<>();
         for (TrackedPlayer trackedPlayer : trackedPlayers.values()) {
-            String name = trackedPlayer.getName() + "@" + trackedPlayer.getUuid();
+            String name = trackedPlayer.getName() + "#" + trackedPlayer.getUuid();
             result.add(name);
         }
         return result;
     }
 
     public TrackedPlayer getByUnique(String unique) {
-        String[] split = unique.split("@", 2);
-        String uuidString = split.length == 2 ? split[1] : split[0];
+        String uuidString = unique.substring(unique.lastIndexOf("#") + 1);
         try {
             return trackedPlayers.get(UUID.fromString(uuidString));
         } catch (IllegalArgumentException ignore) {

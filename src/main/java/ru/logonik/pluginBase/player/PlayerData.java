@@ -17,7 +17,6 @@ public class PlayerData extends CharacterPlayerData {
 
     public void loadData(Player player) {
         super.loadData(player);
-        player.spigot().respawn();
         player.teleport(lastLocation);
         player.setGameMode(gameMode);
     }

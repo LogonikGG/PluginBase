@@ -12,6 +12,7 @@ public class PlayerHandler {
     private final HashMap<UUID, PlayerData> data = new HashMap<>();
 
     public PlayerData savePlayerData(Player player) {
+        Objects.requireNonNull(player, "player must be not null");
         PlayerData playerData = new PlayerData(player);
         data.put(player.getUniqueId(), playerData);
         return playerData;
@@ -19,7 +20,7 @@ public class PlayerHandler {
 
     public void loadPlayerData(Player player) {
         PlayerData playerData = data.get(player.getUniqueId());
-        Objects.requireNonNull(playerData);
+        Objects.requireNonNull(playerData, "player data not found");
         playerData.loadData(player);
     }
 
@@ -27,6 +28,11 @@ public class PlayerHandler {
         data.remove(player.getUniqueId());
     }
 
+    /**
+     *
+     * @deprecated use {@link PlayerResetUtils#reset(Player)}
+     */
+    @Deprecated(forRemoval = true)
     public static void toDefaultPlayer(Player player) {
         player.getInventory().clear();
         if(player.isDead()) {
@@ -44,6 +50,11 @@ public class PlayerHandler {
         }
     }
 
+    /**
+     *
+     * @deprecated use {@link PlayerResetUtils#resetHealthAndHunger(Player)} and {@link PlayerResetUtils#ensurePlayerIsAlive(Player)}
+     */
+    @Deprecated(forRemoval = true)
     public static void healPlayer(Player player) {
         if(player.isDead()) {
             player.spigot().respawn();
@@ -61,6 +72,11 @@ public class PlayerHandler {
         }
     }
 
+    /**
+     *
+     * @deprecated use {@link PlayerResetUtils#reset(Player)} and {@link PlayerResetUtils#clearPlayerVisualIdentity(Player)}}
+     */
+    @Deprecated(forRemoval = true)
     public static void toDefaultFullyPlayer(Player player) {
         toDefaultPlayer(player);
         player.setDisplayName(null);

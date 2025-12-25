@@ -28,6 +28,22 @@ public class PlayerHandler {
         data.remove(player.getUniqueId());
     }
 
+    public PlayerData removePlayerData(UUID playerId) {
+        return data.remove(playerId);
+    }
+
+    public PlayerData getAndRemovePlayerDate(UUID playerId) {
+        return data.remove(playerId);
+    }
+
+    public PlayerData getPlayerDate(UUID playerId) {
+        return data.get(playerId);
+    }
+
+    public PlayerData putPlayerDate(UUID playerId, PlayerData playerData) {
+        return data.put(playerId, playerData);
+    }
+
     /**
      *
      * @deprecated use {@link PlayerResetUtils#reset(Player)}
@@ -65,6 +81,10 @@ public class PlayerHandler {
         player.setFireTicks(0);
     }
 
+    /**
+     *
+     * @deprecated use {@link PlayerResetUtils#healPlayer(Player)}} and {@link PlayerResetUtils#resetBurningAndEffects(Player)}}
+     */
     public static void healAndEffectsClear(Player player) {
         healPlayer(player);
         for (PotionEffect activePotionEffect : player.getActivePotionEffects()) {

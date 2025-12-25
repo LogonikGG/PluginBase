@@ -16,8 +16,8 @@ public class PlayerResetUtils {
     }
     
     public static void clearPlayerVisualIdentity(Player player) {
-        player.setDisplayName(null);
-        player.setPlayerListName(null);
+        player.displayName(null);
+        player.playerListName(null);
     }
 
     public static void clearInventory(Player player) {

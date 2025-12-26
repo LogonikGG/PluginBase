@@ -13,6 +13,14 @@ public class BootstrapPlugin {
         stableStart = false;
     }
 
+    public void startSneakyThrow() {
+        try {
+            start();
+        } catch (Throwable e) {
+            LogoUtils.sneakyThrow(e);
+        }
+    }
+
     public void start() throws Exception {
         serviceLocator.onStart();
         stableStart = true;

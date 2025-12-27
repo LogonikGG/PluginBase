@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import ru.logonik.pluginBase.BukkitUtil;
+import ru.logonik.pluginBase.util.UtilBukkit;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,9 +40,9 @@ public class CharacterPlayerData {
         saturation = player.getSaturation();
         level = player.getLevel();
         xp = player.getExp();
-        potionEffects = BukkitUtil.deepCopyPotionEffects(player.getActivePotionEffects());
-        armorContent = BukkitUtil.deepCopyItemStackArray(player.getInventory().getArmorContents());
-        inventoryContent = BukkitUtil.deepCopyItemStackArray(player.getInventory().getContents());
+        potionEffects = UtilBukkit.deepCopyPotionEffects(player.getActivePotionEffects());
+        armorContent = UtilBukkit.deepCopyItemStackArray(player.getInventory().getArmorContents());
+        inventoryContent = UtilBukkit.deepCopyItemStackArray(player.getInventory().getContents());
     }
 
     public void loadData(Player player) {

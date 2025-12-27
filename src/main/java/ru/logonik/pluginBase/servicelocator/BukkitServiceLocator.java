@@ -7,9 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
-import ru.logonik.pluginBase.BukkitScheduler;
 import ru.logonik.pluginBase.Logger;
-import ru.logonik.pluginBase.Scheduler;
+import ru.logonik.pluginBase.servicelocator.scheduler.BukkitScheduler;
+import ru.logonik.pluginBase.servicelocator.scheduler.Scheduler;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,8 +19,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
     protected final Scheduler scheduler;
     private final Map<UUID, String> playerSessions = new ConcurrentHashMap<>();
 
-    public BukkitServiceLocator(Plugin plugin, Logger logger) {
-        super(logger);
+    public BukkitServiceLocator(Plugin plugin) {
         this.scheduler = new BukkitScheduler(plugin);
         registerService(Plugin.class, plugin);
         registerService(ServicesLocator.class, this);
@@ -77,7 +76,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
                             }
                         }
                     } catch (Exception e) {
-                        logger.error("Error while handle async player available(been joined) in " + service.getClass().getSimpleName(), e);
+                        Logger.error("Error while handle async player available(been joined) in " + service.getClass().getSimpleName(), e);
                     }
                 }
             }
@@ -89,7 +88,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
                     try {
                         playerAvailableListenerSync.onPlayerAvailableSync(player);
                     } catch (Exception e) {
-                        logger.error("Error while handle player available(been joined) in " + value.getClass().getSimpleName(), e);
+                        Logger.error("Error while handle player available(been joined) in " + value.getClass().getSimpleName(), e);
                     }
                 }
             }
@@ -104,7 +103,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
                 try {
                     disableListener.disable();
                 } catch (Exception e) {
-                    logger.error("Error while handle disable plugin in " + value.getClass().getSimpleName(), e);
+                    Logger.error("Error while handle disable plugin in " + value.getClass().getSimpleName(), e);
                 }
             }
         }
@@ -124,7 +123,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
                         }
                         playerAvailableListenerAsync.onPlayerAvailableAsync(player);
                     } catch (Exception e) {
-                        logger.error("Error in async join handler " + service.getClass().getSimpleName(), e);
+                        Logger.error("Error in async join handler " + service.getClass().getSimpleName(), e);
                     }
                 }
             }
@@ -135,7 +134,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
                 try {
                     playerAvailableListenerSync.onPlayerAvailableSync(player);
                 } catch (Exception e) {
-                    logger.error("Error in sync join handler " + service.getClass().getSimpleName(), e);
+                    Logger.error("Error in sync join handler " + service.getClass().getSimpleName(), e);
                 }
             }
         }
@@ -149,7 +148,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
                     try {
                         playerQuitListenerAsync.onPlayerQuitAsync(player);
                     } catch (Exception e) {
-                        logger.error("Error in async quit handler " + service.getClass().getSimpleName(), e);
+                        Logger.error("Error in async quit handler " + service.getClass().getSimpleName(), e);
                     }
                 }
             }
@@ -160,7 +159,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
                 try {
                     playerQuitListenerSync.onPlayerQuitSync(player);
                 } catch (Exception e) {
-                    logger.error("Error in sync quit handler " + service.getClass().getSimpleName(), e);
+                    Logger.error("Error in sync quit handler " + service.getClass().getSimpleName(), e);
                 }
             }
         }

@@ -1,5 +1,6 @@
 package ru.logonik.pluginBase.servicelocator;
 
+
 import ru.logonik.pluginBase.Logger;
 
 import java.util.*;
@@ -7,15 +8,18 @@ import java.util.function.Consumer;
 
 public class ServicesLocator {
     protected final Map<Class<?>, Object> services = new HashMap<>();
-    protected final Logger logger;
-
-    public ServicesLocator(Logger logger) {
-        this.logger = logger;
-        registerService(Logger.class, logger);
-    }
 
     public <T> void registerService(Class<T> clazz, T object) {
         services.put(clazz, object);
+    }
+
+    public <T> void registerService(Class<T> clazz) {
+        try {
+            T handler = clazz.getDeclaredConstructor().newInstance();
+            this.registerService(clazz, handler);
+        } catch (Exception e) {
+            throw new RuntimeException("Не удалось создать экземпляр для " + clazz.getName(), e);
+        }
     }
 
     public <T> T getServiceOrThrow(Class<T> clazz) {
@@ -36,6 +40,15 @@ public class ServicesLocator {
         return Collections.unmodifiableMap(services);
     }
 
+    public <T, E extends Exception> void consumeForInstanceof(Class<T> clazz, ThrowingConsumer<T, E> consumer) throws E {
+        for (Object value : services.values()) {
+            if (clazz.isInstance(value)) {
+                T t = clazz.cast(value);
+                consumer.accept(t);
+            }
+        }
+    }
+
     public <T> void safeConsumeForInstanceof(Class<T> clazz, Consumer<T> consumer) {
         for (Object value : services.values()) {
             if (clazz.isInstance(value)) {
@@ -43,7 +56,7 @@ public class ServicesLocator {
                 try {
                     consumer.accept(t);
                 } catch (Exception e) {
-                    logger.error("Error while consume", e);
+                    Logger.error("Error while consume", e);
                 }
             }
         }

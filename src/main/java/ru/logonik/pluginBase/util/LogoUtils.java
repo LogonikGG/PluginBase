@@ -1,9 +1,64 @@
-package ru.logonik.pluginBase;
+package ru.logonik.pluginBase.util;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.function.Function;
 
 public class LogoUtils {
     @SuppressWarnings("unchecked")
     public static <E extends Throwable> void sneakyThrow(Throwable e) throws E {
         throw (E) e;
+    }
+
+
+    public static Path generateValidUniqueFileName(String input, Path baseDir) {
+        String cleaned = input.replaceAll("[\\\\/:*?\"<>|]", "").trim();
+
+        if (cleaned.isEmpty()) {
+            throw new IllegalArgumentException("The file name cannot be empty or contain only prohibited characters.");
+        }
+
+        String candidate = cleaned;
+        int counter = 1;
+
+        Path folderPath = baseDir.resolve(candidate);
+        while (Files.exists(folderPath)) {
+            candidate = cleaned + "_" + counter;
+            folderPath = baseDir.resolve(candidate);
+            counter++;
+        }
+
+        return folderPath;
+    }
+
+    public static String tryFindUniqueName(String input, Function<String, Boolean> alreadyExistTest) {
+        final int maxTries = 2000;
+        String candidate = input;
+        int counter = 1;
+        while (alreadyExistTest.apply(candidate)) {
+            if (counter > maxTries)
+                throw new IllegalStateException("Too much attempts to find unique name");
+            candidate = input + "_" + counter;
+            counter++;
+        }
+        return candidate;
+    }
+
+    public static <E extends Throwable> String tryFindUniqueNameThrowing(String input, ThrowingFunction<String, Boolean, E> test) throws E {
+        final int maxTries = 2000;
+        String candidate = input;
+        int counter = 1;
+        while (test.apply(candidate)) {
+            if (counter > maxTries)
+                throw new IllegalStateException("Too much attempts to find unique name");
+            candidate = input + "_" + counter++;
+        }
+        return candidate;
+    }
+
+    @FunctionalInterface
+    public interface ThrowingFunction<T, R, E extends Throwable> {
+        R apply(T t) throws E;
     }
 
     public static String formatSeconds(long totalSeconds) {

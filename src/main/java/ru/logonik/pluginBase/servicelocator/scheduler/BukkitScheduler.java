@@ -1,4 +1,4 @@
-package ru.logonik.pluginBase;
+package ru.logonik.pluginBase.servicelocator.scheduler;
 
 import org.bukkit.plugin.Plugin;
 

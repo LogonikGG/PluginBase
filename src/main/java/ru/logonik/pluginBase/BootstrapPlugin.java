@@ -2,6 +2,7 @@ package ru.logonik.pluginBase;
 
 import org.bukkit.plugin.Plugin;
 import ru.logonik.pluginBase.servicelocator.BukkitServiceLocator;
+import ru.logonik.pluginBase.util.LogoUtils;
 
 public class BootstrapPlugin {
 
@@ -9,7 +10,7 @@ public class BootstrapPlugin {
     private boolean stableStart;
 
     public BootstrapPlugin(Plugin plugin) {
-        this.serviceLocator = new BukkitServiceLocator(plugin, new Logger(plugin.getLogger()));
+        this.serviceLocator = new BukkitServiceLocator(plugin);
         stableStart = false;
     }
 

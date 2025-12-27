@@ -1,4 +1,4 @@
-package ru.logonik.pluginBase;
+package ru.logonik.pluginBase.servicelocator.scheduler;
 
 public interface Scheduler {
     void runRepeatingAsync(Runnable task, long delayMillis, long periodMillis);

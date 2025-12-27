@@ -1,36 +1,34 @@
 package ru.logonik.pluginBase;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.util.logging.Level;
 
 public class Logger {
 
-    private final java.util.logging.Logger logger;
+    private static final java.util.logging.Logger logger = JavaPlugin.getProvidingPlugin(Logger.class).getLogger();
 
-    public Logger(java.util.logging.Logger logger) {
-        this.logger = logger;
-    }
-
-    public void error(String s, Throwable ex) {
+    public static void error(String s, Throwable ex) {
         logger.log(Level.SEVERE, s, ex);
     }
 
-    public void error(String s) {
+    public static void error(String s) {
         logger.log(Level.SEVERE, s);
     }
 
-    public void warn(String s) {
+    public static void warn(String s) {
         logger.warning(s);
     }
 
-    public void warnWithStack(String message) {
+    public static void warnWithStack(String message) {
         logWithStack(Level.WARNING, message);
     }
 
-    public void errorWithStack(String message) {
+    public static void errorWithStack(String message) {
         logWithStack(Level.SEVERE, message);
     }
 
-    private void logWithStack(Level level, String message) {
+    private static void logWithStack(Level level, String message) {
         logger.log(level, message);
         StackTraceElement[] stack = new Exception().getStackTrace();
         for (int i = 2; i < stack.length; i++) {
@@ -38,7 +36,7 @@ public class Logger {
         }
     }
 
-    public void info(String s) {
+    public static void info(String s) {
         logger.info(s);
     }
 }

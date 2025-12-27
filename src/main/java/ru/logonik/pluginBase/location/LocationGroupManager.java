@@ -1,10 +1,10 @@
 package ru.logonik.pluginBase.location;
 
 import org.bukkit.Location;
-import ru.logonik.pluginBase.Sanitizer;
 import ru.logonik.pluginBase.execptions.SaveLoadException;
 import ru.logonik.pluginBase.saveload.LoadSaver;
 import ru.logonik.pluginBase.services.BulkDataManager;
+import ru.logonik.pluginBase.util.Sanitizer;
 
 import java.util.stream.Collectors;
 

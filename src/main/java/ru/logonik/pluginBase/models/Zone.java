@@ -100,6 +100,12 @@ public class Zone implements Cloneable {
                 location.getBlockX() - radius, location.getBlockY(), location.getBlockZ() - radius);
     }
 
+    public static Zone square(Location location, int radius) {
+        return new Zone(location.getWorld().getUID(),
+                location.getBlockX() + radius, location.getBlockY() + radius, location.getBlockZ() + radius,
+                location.getBlockX() - radius, location.getBlockY() - radius, location.getBlockZ() - radius);
+    }
+
     public Location getCenter() {
         int centerX = (minX + topX) / 2;
         int centerY = (minY + topY) / 2;
@@ -157,6 +163,16 @@ public class Zone implements Cloneable {
 
     public boolean isInside(UUID world, int x, int y, int z) {
         return this.worldId.equals(world) && topX >= x && x >= minX && topY >= y && y >= minY && topZ >= z && z >= minZ;
+    }
+
+    public boolean isIntersecting(Zone other) {
+        if (!this.worldId.equals(other.worldId)) {
+            return false;
+        }
+
+        return this.minX <= other.topX && this.topX >= other.minX &&  // По оси X
+                this.minY <= other.topY && this.topY >= other.minY &&  // По оси Y
+                this.minZ <= other.topZ && this.topZ >= other.minZ;    // По оси Z
     }
 
     public int getTopY() {

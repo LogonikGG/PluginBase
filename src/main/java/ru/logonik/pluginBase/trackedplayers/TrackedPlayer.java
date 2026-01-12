@@ -37,12 +37,12 @@ public class TrackedPlayer {
     }
 
     public String getUniqueKey() {
-        return name + "@" + uuid;
+        return name + "#" + uuid;
     }
 
-    public static UUID parseUuidFromUniqueKey(String key) {
-        String[] parts = key.split("@", 2);
-        return UUID.fromString(parts[1]);
+    public static UUID parseUuidFromUniqueKey(String unique) {
+        String uuidString = unique.substring(unique.lastIndexOf("#") + 1);
+        return UUID.fromString(uuidString);
     }
 
     public void updatePlayer() {

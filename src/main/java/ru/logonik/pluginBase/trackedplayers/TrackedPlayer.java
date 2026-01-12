@@ -3,6 +3,7 @@ package ru.logonik.pluginBase.trackedplayers;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class TrackedPlayer {
@@ -47,5 +48,17 @@ public class TrackedPlayer {
 
     public void updatePlayer() {
         this.player = Bukkit.getPlayer(uuid);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+        TrackedPlayer that = (TrackedPlayer) object;
+        return Objects.equals(uuid, that.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(uuid);
     }
 }

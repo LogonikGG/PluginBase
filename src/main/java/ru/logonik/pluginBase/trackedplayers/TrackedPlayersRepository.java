@@ -61,8 +61,8 @@ public abstract class TrackedPlayersRepository<TP extends TrackedPlayer> impleme
         }
     }
 
-    public TrackedPlayer getByUnique(UUID unique) {
-        return trackedPlayers.get(unique);
+    public TP getByUUID(UUID uuid) {
+        return trackedPlayers.get(uuid);
     }
 
     @EventHandler

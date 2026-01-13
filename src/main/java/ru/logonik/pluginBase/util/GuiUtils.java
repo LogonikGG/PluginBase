@@ -1,5 +1,6 @@
 package ru.logonik.pluginBase.util;
 
+import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
 import dev.triumphteam.gui.guis.GuiItem;
 import net.kyori.adventure.text.Component;
@@ -7,6 +8,7 @@ import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -18,6 +20,13 @@ public class GuiUtils {
         int rowComplete = items % 9;
         for (int i = rowComplete; i < 9; i++) {
             gui.addItem(guiItem);
+        }
+    }
+
+    public static void fillUntilNextRow(BaseGui gui, int items) {
+        int rowComplete = items % 9;
+        for (int i = rowComplete; i < 9; i++) {
+            gui.addItem(ItemBuilder.from(Material.AIR).asGuiItem());
         }
     }
 

@@ -24,7 +24,10 @@ public final class DoorUtils {
         Block doorBlock = getBottomDoorBlock(block);
         if (doorBlock == null) return false;
 
-        Door door = (Door) doorBlock.getBlockData();
+        BlockData data = doorBlock.getBlockData();
+        if (!(data instanceof Door)) return false;
+        Door door = (Door) data;
+
         return setDoorState(doorBlock, !door.isOpen());
     }
 
@@ -48,17 +51,33 @@ public final class DoorUtils {
     }
 
     private static boolean setDoorState(Block bottomBlock, boolean open) {
-        BlockData data = bottomBlock.getBlockData();
-        if (!(data instanceof Door)) return false;
-        Door door = (Door) data;
+        BlockData bottomData = bottomBlock.getBlockData();
+        if (!(bottomData instanceof Door)) return false;
+        Door bottomDoor = (Door) bottomData;
 
-        if (door.isOpen() == open) return true;
+        if (bottomDoor.isOpen() == open) return true;
 
-        door.setOpen(open);
-        bottomBlock.setBlockData(door, true);
+        // Меняем состояние нижней части
+        bottomDoor.setOpen(open);
+        bottomBlock.setBlockData(bottomDoor, false);
 
+        // Меняем состояние верхней части
         Block topBlock = bottomBlock.getRelative(BlockFace.UP);
-        topBlock.setBlockData(door, true);
+        BlockData topData = topBlock.getBlockData();
+
+        if (!(topData instanceof Door)) {
+            // Откатываем изменения, если верхний блок не дверь
+            bottomBlock.setBlockData(bottomDoor, false);
+            return false;
+        }
+
+        Door topDoor = (Door) topData;
+        topDoor.setOpen(open);
+        topBlock.setBlockData(topDoor, false);
+
+        // Обновляем физику для обоих блоков
+        bottomBlock.getState().update(true, false);
+        topBlock.getState().update(true, false);
 
         return true;
     }
@@ -66,8 +85,8 @@ public final class DoorUtils {
     private static Block getBottomDoorBlock(Block block) {
         BlockData data = block.getBlockData();
         if (!(data instanceof Door)) return null;
-        Door door = (Door) data;
 
+        Door door = (Door) data;
         return door.getHalf() == Bisected.Half.TOP
                 ? block.getRelative(BlockFace.DOWN)
                 : block;

@@ -90,6 +90,24 @@ public class PerFileGsonLoadSaver<ID, O> implements LoadSaver<ID, O> {
     }
 
     @Override
+    public void deleteAll() throws SaveLoadException {
+        try {
+            if (!Files.exists(baseFolder)) {
+                return;
+            }
+
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(baseFolder, "*.json")) {
+                for (Path file : stream) {
+                    Files.delete(file);
+                }
+            }
+
+        } catch (IOException e) {
+            throw new SaveLoadException("Failed to delete all objects from " + baseFolder, e);
+        }
+    }
+
+    @Override
     public void saveAll(Map<ID, O> objects) throws SaveLoadException {
         for (Map.Entry<ID, O> entry : objects.entrySet()) {
             save(entry.getKey(), entry.getValue());

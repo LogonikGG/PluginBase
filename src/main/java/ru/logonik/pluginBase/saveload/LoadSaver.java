@@ -9,5 +9,6 @@ public interface LoadSaver<ID,O> {
     Map<ID,O> loadAll() throws SaveLoadException;
     void save(ID id, O object) throws SaveLoadException;
     void delete(ID id) throws SaveLoadException;
+    void deleteAll() throws SaveLoadException;
     void saveAll(Map<ID,O> objects) throws SaveLoadException;
 }

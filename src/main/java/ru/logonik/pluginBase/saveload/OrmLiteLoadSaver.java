@@ -61,6 +61,15 @@ public class OrmLiteLoadSaver<ID, O> implements LoadSaver<ID, O> {
     }
 
     @Override
+    public void deleteAll() throws SaveLoadException {
+        try {
+            dao.deleteBuilder().delete();
+        } catch (SQLException e) {
+            throw new SaveLoadException("Failed to delete all objects", e);
+        }
+    }
+
+    @Override
     public void saveAll(Map<ID, O> objects) throws SaveLoadException {
         try {
             for (O object : objects.values()) {

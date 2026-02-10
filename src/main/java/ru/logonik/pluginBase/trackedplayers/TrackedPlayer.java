@@ -17,6 +17,11 @@ public class TrackedPlayer {
         this.player = player;
     }
 
+    public TrackedPlayer(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
+    }
+
     public UUID getUuid() {
         return uuid;
     }

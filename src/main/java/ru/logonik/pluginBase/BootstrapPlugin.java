@@ -1,33 +1,31 @@
 package ru.logonik.pluginBase;
 
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import ru.logonik.pluginBase.servicelocator.BukkitServiceLocator;
 import ru.logonik.pluginBase.util.LogoUtils;
 
-public class BootstrapPlugin {
+public abstract class BootstrapPlugin extends JavaPlugin {
 
-    private final BukkitServiceLocator serviceLocator;
-    private boolean stableStart;
+    protected final BukkitServiceLocator serviceLocator;
+    protected boolean stableStart;
 
-    public BootstrapPlugin(Plugin plugin) {
-        this.serviceLocator = new BukkitServiceLocator(plugin);
-        stableStart = false;
+    public BootstrapPlugin() {
+        this.serviceLocator = new BukkitServiceLocator(this);
     }
 
-    public void startSneakyThrow() {
+    @Override
+    public void onEnable() {
+        stableStart = false;
         try {
-            start();
-        } catch (Throwable e) {
+            serviceLocator.onStart();
+        } catch (Exception e) {
             LogoUtils.sneakyThrow(e);
         }
-    }
-
-    public void start() throws Exception {
-        serviceLocator.onStart();
         stableStart = true;
     }
 
-    public void stop() {
+    @Override
+    public void onDisable() {
         if (stableStart) {
             serviceLocator.onStop();
         }

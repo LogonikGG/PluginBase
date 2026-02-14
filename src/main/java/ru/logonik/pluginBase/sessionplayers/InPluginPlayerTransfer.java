@@ -17,6 +17,9 @@ public class InPluginPlayerTransfer implements PlayerTransferHandler {
     @Override
     public void processJoin(UUID player, SessionManager newSession) {
         SessionManager alreadySession = players.get(player);
+        if(Objects.equals(alreadySession, newSession)) {
+            return;
+        }
         if(alreadySession != null) {
             safeForceLeave(alreadySession, player);
         }

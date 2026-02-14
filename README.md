@@ -73,8 +73,8 @@ and, depending on the interfaces it implements, is processed as follows:
 4. `PlayerAvailableListener(Async/Sync)` — Called when a player joins the server or becomes available*.
    (*If the plugin is reloaded, this will be called for every player already on the server).
 5. `PlayerQuitListener(Async/Sync)` — Called when a player leaves the server.
-
-** check a [WIKI](/wiki) for others features **
+---
+**check a [wiki](https://github.com/LogonikGG/PluginBase/wiki) for others features**
 
 ---
 

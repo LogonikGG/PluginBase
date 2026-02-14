@@ -59,7 +59,7 @@ public class ExampleService implements PluginStartListener {
 ```
 
 ---
-# INFRASTRUCTURE Feature:
+# Infrastructure feature:
 
 ## Services System / ServiceLocator
 
@@ -74,7 +74,7 @@ and, depending on the interfaces it implements, is processed as follows:
    (*If the plugin is reloaded, this will be called for every player already on the server).
 5. `PlayerQuitListener(Async/Sync)` — Called when a player leaves the server.
 
-# check a [WIKI](/wiki) for others
+** check a [WIKI](/wiki) for others features **
 
 ---
 

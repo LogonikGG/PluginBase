@@ -5,4 +5,5 @@ public interface Scheduler {
     void runRepeatingSync(Runnable task, long delayMillis, long periodMillis);
     void runAsync(Runnable task);
     void runSync(Runnable task);
+    void runInMainThread(Runnable task);
 }

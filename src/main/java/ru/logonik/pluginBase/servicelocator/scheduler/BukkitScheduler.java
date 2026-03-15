@@ -1,5 +1,6 @@
 package ru.logonik.pluginBase.servicelocator.scheduler;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 public class BukkitScheduler implements Scheduler {
@@ -31,5 +32,14 @@ public class BukkitScheduler implements Scheduler {
     @Override
     public void runSync(Runnable task) {
         plugin.getServer().getScheduler().runTask(plugin, task);
+    }
+
+    @Override
+    public void runInMainThread(Runnable task) {
+        if(Bukkit.isPrimaryThread()) {
+            task.run();
+        } else {
+            plugin.getServer().getScheduler().runTask(plugin, task);
+        }
     }
 }

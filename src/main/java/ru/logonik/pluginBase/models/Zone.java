@@ -199,6 +199,14 @@ public class Zone implements Cloneable {
         return minZ;
     }
 
+    public UUID getWorldId() {
+        return worldId;
+    }
+
+    public void setWorldId(UUID worldId) {
+        this.worldId = worldId;
+    }
+
     public Iterator<Block> iterateBottom() {
         World world = UtilBukkit.getWorldOrThrow(worldId);
         return iterateBottom(world);

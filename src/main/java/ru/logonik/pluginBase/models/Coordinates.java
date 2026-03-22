@@ -1,6 +1,7 @@
 package ru.logonik.pluginBase.models;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public class Coordinates {
     private double x;
@@ -28,8 +29,8 @@ public class Coordinates {
         this.x = location.getX();
         this.y = location.getY();
         this.z = location.getZ();
-        this.pitch = location.getPitch();
         this.yaw = location.getYaw();
+        this.pitch = location.getPitch();
     }
 
     public double getX() {
@@ -70,5 +71,9 @@ public class Coordinates {
 
     public void setYaw(float yaw) {
         this.yaw = yaw;
+    }
+
+    public Location toLocation(World world) {
+        return new Location(world, x, y, z, yaw, pitch);
     }
 }

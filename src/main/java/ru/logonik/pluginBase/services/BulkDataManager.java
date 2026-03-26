@@ -35,6 +35,10 @@ public class BulkDataManager<K, D, M> implements PluginStartListener, PluginDisa
 
     @Override
     public void start(ServicesLocator servicesLocator) throws Exception {
+        loadAll();
+    }
+
+    public void loadAll() throws SaveLoadException {
         Map<K, M> allModels = saver.loadAll();
         if (allModels != null) {
             for (Map.Entry<K, M> entry : allModels.entrySet()) {
@@ -46,6 +50,10 @@ public class BulkDataManager<K, D, M> implements PluginStartListener, PluginDisa
 
     @Override
     public void disable() throws Exception {
+        saveAll();
+    }
+
+    public void saveAll() throws SaveLoadException {
         Map<K, M> modelsToSave = new ConcurrentHashMap<>();
         for (Map.Entry<K, D> entry : dataMap.entrySet()) {
             modelsToSave.put(entry.getKey(), toModel.apply(entry.getValue()));

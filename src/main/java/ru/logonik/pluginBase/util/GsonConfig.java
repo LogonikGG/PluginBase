@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class GsonConfig<T> {
 
@@ -17,13 +18,25 @@ public class GsonConfig<T> {
     private final String fileName;
     private final Class<T> configClass;
     private final Gson gson;
+    private final boolean createBackup;
+    private final int maxBackups;
 
     private T configData;
 
     public GsonConfig(Plugin plugin, String fileName, Class<T> configClass) {
+        this(plugin, fileName, configClass, false, 3);
+    }
+
+    public GsonConfig(Plugin plugin, String fileName, Class<T> configClass, boolean createBackup) {
+        this(plugin, fileName, configClass, createBackup, 3);
+    }
+
+    public GsonConfig(Plugin plugin, String fileName, Class<T> configClass, boolean createBackup, int maxBackups) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.configClass = configClass;
+        this.createBackup = createBackup;
+        this.maxBackups = maxBackups;
         this.gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
@@ -31,10 +44,16 @@ public class GsonConfig<T> {
     }
 
     public GsonConfig(Plugin plugin, String fileName, Class<T> configClass, Gson gson) {
+        this(plugin, fileName, configClass, gson, false, 3);
+    }
+
+    public GsonConfig(Plugin plugin, String fileName, Class<T> configClass, Gson gson, boolean createBackup, int maxBackups) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.configClass = configClass;
         this.gson = gson;
+        this.createBackup = createBackup;
+        this.maxBackups = maxBackups;
     }
 
     public boolean load() {
@@ -64,11 +83,6 @@ public class GsonConfig<T> {
         }
     }
 
-    /**
-     * Сохранить конфиг на диск
-     *
-     * @return true если сохранение успешно
-     */
     public boolean save() {
         if (configData == null) {
             configData = createDefaultConfig();
@@ -81,10 +95,17 @@ public class GsonConfig<T> {
 
             Path configPath = plugin.getDataFolder().toPath().resolve(fileName);
 
-            try (Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8)) {
+            if (createBackup && Files.exists(configPath)) {
+                createBackup(configPath);
+            }
+
+            Path tempPath = configPath.resolveSibling(fileName + ".tmp");
+
+            try (Writer writer = Files.newBufferedWriter(tempPath, StandardCharsets.UTF_8)) {
                 gson.toJson(configData, writer);
             }
 
+            Files.move(tempPath, configPath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
             plugin.getLogger().info("Successfully saved " + fileName);
             return true;
 
@@ -92,6 +113,43 @@ public class GsonConfig<T> {
             plugin.getLogger().severe("Failed to save " + fileName + ": " + e.getMessage());
             return false;
         }
+    }
+
+    private void createBackup(Path originalPath) throws IOException {
+        for (int i = maxBackups; i > 0; i--) {
+            Path backupPath = originalPath.resolveSibling(fileName + ".backup" + (i == 1 ? "" : "." + i));
+            Path nextBackupPath = originalPath.resolveSibling(fileName + ".backup" + (i + 1));
+
+            if (Files.exists(backupPath)) {
+                if (i == maxBackups) {
+                    Files.delete(backupPath);
+                } else {
+                    Files.move(backupPath, nextBackupPath, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+        }
+
+        Path backupPath = originalPath.resolveSibling(fileName + ".backup");
+        Files.copy(originalPath, backupPath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private boolean restoreFromBackup() {
+        if (!createBackup) return false;
+
+        Path originalPath = plugin.getDataFolder().toPath().resolve(fileName);
+        Path latestBackup = originalPath.resolveSibling(fileName + ".backup");
+
+        if (Files.exists(latestBackup)) {
+            try {
+                Files.copy(latestBackup, originalPath, StandardCopyOption.REPLACE_EXISTING);
+                plugin.getLogger().info("Restored " + fileName + " from backup");
+                return load();
+            } catch (IOException e) {
+                plugin.getLogger().severe("Failed to restore from backup: " + e.getMessage());
+            }
+        }
+
+        return false;
     }
 
     public T get() {
@@ -110,7 +168,7 @@ public class GsonConfig<T> {
         return load();
     }
 
-    private T createDefaultConfig() {
+    protected T createDefaultConfig() {
         try {
             return configClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {

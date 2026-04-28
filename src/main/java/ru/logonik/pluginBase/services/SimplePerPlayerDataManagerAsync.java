@@ -12,8 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SimplePerPlayerDataManagerAsync<V> implements PlayerAvailableListenerAsync, PlayerQuitListenerAsync {
 
-    private final Map<UUID, V> playerData = new ConcurrentHashMap<>();
-    private final LoadSaver<UUID, V> saver;
+    protected final Map<UUID, V> playerData = new ConcurrentHashMap<>();
+    protected final LoadSaver<UUID, V> saver;
 
     public SimplePerPlayerDataManagerAsync(LoadSaver<UUID, V> saver) {
         this.saver = saver;

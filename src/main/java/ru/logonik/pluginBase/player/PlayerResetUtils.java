@@ -2,6 +2,7 @@ package ru.logonik.pluginBase.player;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 
 public class PlayerResetUtils {
@@ -21,7 +22,10 @@ public class PlayerResetUtils {
     }
 
     public static void clearInventory(Player player) {
-        player.getInventory().clear();
+        PlayerInventory inventory = player.getInventory();
+        inventory.clear();
+        player.setItemOnCursor(null);
+        inventory.setItemInOffHand(null);
     }
 
     public static void healPlayer(Player player) {

@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.NonNull;
 import ru.logonik.pluginBase.Logger;
 import ru.logonik.pluginBase.servicelocator.scheduler.BukkitScheduler;
 import ru.logonik.pluginBase.servicelocator.scheduler.Scheduler;
@@ -17,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BukkitServiceLocator extends ServicesLocator implements Listener {
 
     protected final Scheduler scheduler;
-    private final Map<UUID, String> playerSessions = new ConcurrentHashMap<>();
+    private final Map<UUID, UUID> joinTokens = new ConcurrentHashMap<>();
 
     public BukkitServiceLocator(Plugin plugin) {
         this.scheduler = new BukkitScheduler(plugin);
@@ -51,11 +52,10 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
 
     protected void initAlreadyExistedPlayers() {
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        Map<UUID, String> initialSessions = new HashMap<>();
+        Map<UUID, UUID> initialTokens = new HashMap<>();
         for (Player player : players) {
-            String sessionId = UUID.randomUUID().toString();
-            initialSessions.put(player.getUniqueId(), sessionId);
-            playerSessions.put(player.getUniqueId(), sessionId);
+            UUID joinToken = assignJoinToken(player);
+            initialTokens.put(player.getUniqueId(), joinToken);
         }
         scheduler.runAsync(() -> {
             for (Object service : services.values()) {
@@ -65,11 +65,11 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
                         List<Player> playersCopy = new ArrayList<>(players);
                         for (Player player : playersCopy) {
                             UUID playerId = player.getUniqueId();
-                            String expectedSession = initialSessions.get(playerId);
-                            String currentSession = playerSessions.get(playerId);
+                            UUID expectedToken = initialTokens.get(playerId);
+                            UUID currentToken = joinTokens.get(playerId);
 
-                            if (expectedSession != null &&
-                                    expectedSession.equals(currentSession) &&
+                            if (expectedToken != null &&
+                                    expectedToken.equals(currentToken) &&
                                     player.isOnline()) {
 
                                 playerAvailableListenerAsync.onPlayerAvailableAsync(player);
@@ -96,7 +96,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
     }
 
     public void onStop() {
-        playerSessions.clear();
+        joinTokens.clear();
         for (Object value : services.values()) {
             if (value instanceof PluginDisableListener) {
                 PluginDisableListener disableListener = (PluginDisableListener) value;
@@ -110,16 +110,14 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
     }
 
     protected void onPlayerJoin(Player player) {
-        String sessionId = UUID.randomUUID().toString();
-        playerSessions.put(player.getUniqueId(), sessionId);
+        UUID joinToken = assignJoinToken(player);
         scheduler.runAsync(() -> {
             for (Object service : services.values()) {
                 if (service instanceof PlayerAvailableListenerAsync) {
                     PlayerAvailableListenerAsync playerAvailableListenerAsync = (PlayerAvailableListenerAsync) service;
                     try {
-                        String currentSession = playerSessions.get(player.getUniqueId());
-                        if (currentSession == null || !currentSession.equals(sessionId)) {
-                            break;
+                        if (!joinToken.equals(joinTokens.get(player.getUniqueId()))) {
+                            return;
                         }
                         playerAvailableListenerAsync.onPlayerAvailableAsync(player);
                     } catch (Exception e) {
@@ -141,6 +139,7 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
     }
 
     protected void onPlayerQuit(Player player) {
+        joinTokens.remove(player.getUniqueId());
         scheduler.runAsync(() -> {
             for (Object service : services.values()) {
                 if (service instanceof PlayerQuitListenerAsync) {
@@ -163,5 +162,11 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
                 }
             }
         }
+    }
+
+    private @NonNull UUID assignJoinToken(Player player) {
+        UUID joinToken = UUID.randomUUID();
+        joinTokens.put(player.getUniqueId(), joinToken);
+        return joinToken;
     }
 }

@@ -17,8 +17,13 @@ public class DatabaseOrmliteManager {
     private final ConnectionSource connectionSource;
 
     public DatabaseOrmliteManager(DatabaseConfig config) throws Exception {
-        File driverJar = new File(config.getDriverJar());
-        URLClassLoader loader = new URLClassLoader(new URL[]{driverJar.toURI().toURL()}, this.getClass().getClassLoader());
+        ClassLoader loader;
+        if (config.getDriverJar() != null && !config.getDriverJar().trim().isEmpty()) {
+            File driverJar = new File(config.getDriverJar());
+            loader = new URLClassLoader(new URL[]{driverJar.toURI().toURL()}, this.getClass().getClassLoader());
+        } else {
+            loader = this.getClass().getClassLoader();
+        }
         Class<?> driverClass = Class.forName(config.getDriverClass(), true, loader);
         Driver driverInstance = (Driver) driverClass.getDeclaredConstructor().newInstance();
         DriverManager.registerDriver(new DriverShim(driverInstance));

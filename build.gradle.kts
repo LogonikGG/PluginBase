@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "ru.logonik"
-version = "6.0.0-SNAPSHOT"
+version = "7.0-SNAPSHOT"
 
 repositories {
     mavenLocal()

@@ -13,11 +13,17 @@ public abstract class BootstrapPlugin extends JavaPlugin {
         this.serviceLocator = new BukkitServiceLocator(this);
     }
 
+    public abstract void preOnEnable() throws Exception;
+
+    public void postOnEnable() throws Exception {};
+
     @Override
     public void onEnable() {
         stableStart = false;
         try {
+            preOnEnable();
             serviceLocator.onStart();
+            postOnEnable();
         } catch (Exception e) {
             LogoUtils.sneakyThrow(e);
         }

@@ -27,12 +27,12 @@ public class BukkitServiceLocator extends ServicesLocator implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    protected void onJoin(PlayerJoinEvent event) {
         onPlayerJoin(event.getPlayer());
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
+    protected void onQuit(PlayerQuitEvent event) {
         onPlayerQuit(event.getPlayer());
     }
 

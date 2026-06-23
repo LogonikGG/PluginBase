@@ -28,6 +28,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.13.1") // Apache License Version 2.0
 
     compileOnly("com.j256.ormlite:ormlite-jdbc:6.1") // ISC License (https://opensource.org/licenses/ISC)
+    compileOnly("org.postgresql:postgresql:42.7.8")
+
 }
 
 java {
